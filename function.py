@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-
-
-
 def area(width):
 	'闭包案例1'
 	def calculation(height):
@@ -41,5 +38,15 @@ def factorial2(n):
 		return 1
 	return n * factorial2(n - 1)
 
-print(factorial1(5))
-print(factorial2(5))
+# print(factorial1(5))
+# print(factorial2(5))
+
+def fibonacci(n):
+	'斐波拉契数列'
+	if n >= 1:
+		if n == 1 or n == 2:
+			return 1
+		else:
+			return fibonacci(n - 1) + fibonacci(n - 2)
+
+# print(fibonacci(20))
