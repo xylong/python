@@ -9,15 +9,13 @@ class Wife(Girl):
 	def __init__(self, name, age):
 		super().__init__(name, age)
 
-
-	def marry():
+	def marry(self):
 		print('married')
 
 
 
-class Lover(object):
+class Lover(Girl):
 	"""情人"""
-	def __init__(self, arg):
-		super(ClassName, self).__init__()
-		self.arg = arg
+	def __init__(self, name, age):
+		super().__init__(name, age)
 		
