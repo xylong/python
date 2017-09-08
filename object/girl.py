@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# Filename: girl.py
 
 class Girl(object):
 	"""妹子"""
@@ -28,28 +29,3 @@ class Girl(object):
 
 	age = property(getAge, setAge, delAge)	# 方法转属性
 
-
-class Wife(Girl):
-	"""妻子"""
-	def __init__(self, name):
-		super().__init__()
-		self.name = name
-
-class Lover(object):
-	"""情人"""
-	def __init__(self, arg):
-		super(ClassName, self).__init__()
-		self.arg = arg
-		
-
-girl = Girl('jingjing', 108)
-print(girl.getAge())
-print(girl.name)
-girl.age = 19
-print(girl.age, girl.getAge(), girl._Girl__age)	# 三种取法
-
-# 私有属性不能直接搞
-try:
-	print(girl.__age)
-except AttributeError as e:
-	print(e)
