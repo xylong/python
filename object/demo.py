@@ -19,7 +19,7 @@ finally:
 
 
 
-linlin = Wife('琳琳')
+linlin = Wife('琳琳', 18)
 xixi = Lover('西西', 17)
 
 
@@ -32,5 +32,6 @@ for u in l:
 	sleep(u)
 
 
-h = Harem([girl, linlin], [xixi])
+h = Harem([girl, linlin, xixi])
 h.count()
+h.show()

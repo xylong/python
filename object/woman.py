@@ -29,9 +29,25 @@ class Lover(Girl):
 
 class Harem(object):
 	"""后宫"""
-	def __init__(self, wifes, lovers):
-		self.wifes = wifes
-		self.lovers = lovers
+	wifes = []
+	lovers = []
+
+	def __init__(self, users):
+		if isinstance(users, list):
+			for u in users:
+				if isinstance(u, Wife):
+					self.wifes.append(u)
+				else:
+					self.lovers.append(u)
+
 
 	def count(self):
 		print('你有%d个老婆，%d个情人' % (len(self.wifes), len(self.lovers)))
+
+	def show(self):
+		'分类显示后宫'
+		print('你的老婆有：%s \n你的情人有：%s' % (self.getUser(self.wifes), self.getUser(self.lovers)))
+
+	def getUser(self, arr):
+		'根据不同后宫类型查找'
+		return '、'.join(list(map(lambda u: u.name, arr)))
