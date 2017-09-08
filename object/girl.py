@@ -26,7 +26,7 @@ class Girl(object):
 		'删除年龄'
 		del __age
 
-	x = property(getAge, setAge, delAge)
+	age = property(getAge, setAge, delAge)	# 方法转属性
 
 
 class Wife(Girl):
@@ -45,8 +45,8 @@ class Lover(object):
 girl = Girl('jingjing', 108)
 print(girl.getAge())
 print(girl.name)
-girl.x = 19
-print(girl.x, girl.getAge(), girl._Girl__age)	# 三种取法
+girl.age = 19
+print(girl.age, girl.getAge(), girl._Girl__age)	# 三种取法
 
 # 私有属性不能直接搞
 try:
