@@ -1,28 +1,55 @@
-class Student(object):
-	"""docstring for Student"""
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+class Girl(object):
+	"""妹子"""
+	name = ''
+	__age = 0	# 私有属性(伪私有)，实际上python自动改成_类名__属性名
+
 	def __init__(self, name, age):
-		super(Student, self).__init__()
-		self.__name = name
+		self.name = name
 		self.__age = age
 
-	def getName(self):
-		print('%s' % self.__name)
+	def getAge(self):
+		'获取年龄'
+		return self.__age
 
-	@property
-	def age(self):
-		return self.__age;
-
-	@age.setter
-	def age(self, age):
+	def setAge(self, age):
+		'设置年龄'
 		if not isinstance(age, int):
 			raise ValueError('age must be an integer')
 		if age < 0 or age > 100:
 			raise ValueError('age must between 0~100')
 		self.__age = age
 
+	def delAge():
+		'删除年龄'
+		del __age
 
-s = Student('jingjing', 18)
-s.getName()
-s.age = 20	# 通过装饰器设置属性
-print(s._Student__age)	# 强取私有属性
-print(dir(Student))	# 获取类属性和方法
+	x = property(getAge, setAge, delAge)
+
+
+class Wife(Girl):
+	"""妻子"""
+	def __init__(self, name):
+		super().__init__()
+		self.name = name
+
+class Lover(object):
+	"""情人"""
+	def __init__(self, arg):
+		super(ClassName, self).__init__()
+		self.arg = arg
+		
+
+girl = Girl('jingjing', 108)
+print(girl.getAge())
+print(girl.name)
+girl.x = 19
+print(girl.x, girl.getAge(), girl._Girl__age)	# 三种取法
+
+# 私有属性不能直接搞
+try:
+	print(girl.__age)
+except AttributeError as e:
+	print(e)
