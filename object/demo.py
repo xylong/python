@@ -19,5 +19,18 @@ finally:
 
 
 
-wife = Wife('琳琳', 18)
-wife.marry()
+linlin = Wife('琳琳')
+xixi = Lover('西西', 17)
+
+
+# 多态
+def sleep(girl):
+	girl.sleep()
+
+l = [girl, linlin, xixi]
+for u in l:
+	sleep(u)
+
+
+h = Harem([girl, linlin], [xixi])
+h.count()

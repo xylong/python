@@ -7,9 +7,10 @@ class Girl(object):
 	name = ''
 	__age = 0	# 私有属性(伪私有)，实际上python自动改成_类名__属性名
 
-	def __init__(self, name, age):
+	def __init__(self, name, age = 0):
 		self.name = name
-		self.__age = age
+		if isinstance(age, int):
+			self.setAge(age)
 
 	def getAge(self):
 		'获取年龄'
@@ -28,4 +29,7 @@ class Girl(object):
 		del __age
 
 	age = property(getAge, setAge, delAge)	# 方法转属性
+
+	def sleep(self):
+		print('sleep with a girl')
 
