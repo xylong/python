@@ -88,5 +88,5 @@ class QSBK(object):
 				self.getOne(stories, nowPage)
 
 
-qq = QSBK()
-qq.start()
+qs = QSBK()
+qs.start()
