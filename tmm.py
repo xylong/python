@@ -15,6 +15,7 @@ class TMM(object):
     """淘女郎爬虫"""
 
     def __init__(self):
+        self.root_path = ''  # 存放目录
         self.code = 'gbk'   # 编码格式
         self.url = 'https://mm.taobao.com/tstar/search/tstar_model.do?_input_charset=utf-8'  # 美人库
 
@@ -68,11 +69,13 @@ class TMM(object):
     def mkdir(self, path):
         '''没有才创建'''
         if not os.path.exists(path):
-            os.mkdir(path)
+            return os.mkdir(path)
+        return True
 
     # 保存模特信息
-    def save_profile(self):
-        pass
+    def save_profile(self, mm):
+        fileName = mm['realName'] + '\\' + mm['realName'] + '.txt'
+        # print(fileName)
 
     # 保存图片
     def save_imgs(self):
@@ -82,8 +85,30 @@ class TMM(object):
     def compile(self, pattern=None):
         return re.compile(pattern, re.S)
 
+    # 保存
+    def save(self, tstar):
+        path = self.dir + '\\' + tstar['realName']
+        if self.mkdir(path):
+            self.save_profile(tstar)
+
+    @property
+    def dir(self):
+        return self.root_path
+
+    @dir.setter
+    def dir(self, dirName):
+        '''创建保存的根目录'''
+        if isinstance(dirName, str):
+            if self.mkdir(dirName):
+                self.root_path = dirName
+
     def run(self):
-        self.get_album_ids(646632716)
+        # self.get_album_ids(646632716)
+        name = input('enter save directory: \n')
+        self.dir = name
+        mm = self.get_tstar_list()
+        for tstar in mm:
+            self.save(tstar)
 
 
 mm = TMM()
