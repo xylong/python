@@ -9,6 +9,7 @@ from urllib import request
 import re
 import os
 import json
+import platform
 
 
 class TMM(object):
@@ -69,8 +70,7 @@ class TMM(object):
     def mkdir(self, path):
         '''没有才创建'''
         if not os.path.exists(path):
-            return os.mkdir(path)
-        return True
+            os.mkdir(path)
 
     # 保存模特信息
     def save_profile(self, mm):
@@ -87,9 +87,17 @@ class TMM(object):
 
     # 保存
     def save(self, tstar):
-        path = self.dir + '\\' + tstar['realName']
-        if self.mkdir(path):
-            self.save_profile(tstar)
+        path = self.dir + self.delimiter + tstar['realName']
+        self.mkdir(path)
+        # self.save_profile(tstar)
+    
+    # 获取目录分隔符
+    @property
+    def delimiter(self):
+        if 'Windows' == platform.system():
+            return '\\'
+        else:
+            return '/'
 
     @property
     def dir(self):
@@ -99,11 +107,10 @@ class TMM(object):
     def dir(self, dirName):
         '''创建保存的根目录'''
         if isinstance(dirName, str):
-            if self.mkdir(dirName):
-                self.root_path = dirName
+            self.mkdir(dirName)
+            self.root_path = dirName
 
     def run(self):
-        # self.get_album_ids(646632716)
         name = input('enter save directory: \n')
         self.dir = name
         mm = self.get_tstar_list()
