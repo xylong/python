@@ -74,8 +74,10 @@ class TMM(object):
 
     # 保存模特信息
     def save_profile(self, mm):
-        fileName = mm['realName'] + '\\' + mm['realName'] + '.txt'
-        # print(fileName)
+        fileName = self.dir + self.delimiter + \
+            mm['realName'] + self.delimiter + mm['realName'] + '.txt'
+        with open(fileName, 'w') as f:
+            f.write(mm['realName'])
 
     # 保存图片
     def save_imgs(self):
@@ -89,8 +91,8 @@ class TMM(object):
     def save(self, tstar):
         path = self.dir + self.delimiter + tstar['realName']
         self.mkdir(path)
-        # self.save_profile(tstar)
-    
+        self.save_profile(tstar)
+
     # 获取目录分隔符
     @property
     def delimiter(self):
