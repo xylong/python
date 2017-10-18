@@ -15,51 +15,67 @@ class TMM(object):
     """淘女郎爬虫"""
 
     def __init__(self):
-        pass
+        self.code = 'gbk'   # 编码格式
+        self.url = 'https://mm.taobao.com/tstar/search/tstar_model.do?_input_charset=utf-8'  # 美人库
+        # 个人中心(爱秀)
+        self.ai_show_url = 'https://mm.taobao.com/self/aiShow.htm?userId=%s'
+        self.album_url = 'https://mm.taobao.com/self/album/open_album_list.htm?_charset=utf-8&user_id%20='  # 相册列表
+        self.album_photo_url = 'https://mm.taobao.com/self/album/album_photo_list.htm?user_id=%s&album_id=%s'   # 具体相册
 
     # 获取淘女郎list
     def get_tstar_list(self):
         '''30个模特的信息'''
-        req = request.Request(
-            'https://mm.taobao.com/tstar/search/tstar_model.do?_input_charset=utf-8')
+        req = request.Request(self.url)
 
-        with request.urlopen(req) as f:
-            if f.status == 200:
-                json_str = f.read().decode('gbk').encode('utf-8')
-                data = json.loads(json_str.decode('utf-8'))
-                if data['status'] == 1:
-                    return data['data']['searchDOList']
+        res = self.visit(req)
+        data = json.loads(res)
+        if data['status'] == 1:
+            return data['data']['searchDOList']
 
+    # 爱秀(个人中心)
     def aiShow(self, userId):
-        req = request.Request(
-            'https://mm.taobao.com/self/aiShow.htm?userId=%s' % userId)
-        with request.urlopen(req) as f:
-            page = f.read().decode('gbk')
-            print(page)
+        url = self.ai_show_url % userId
+        req = request.Request(url)
+        res = self.visit(req)
+        print(res)
 
     # 获取相册列表
     def get_album_list(self, userId):
-        req = request.Request('https://mm.taobao.com/self/album/open_album_list.htm?_charset=utf-8&user_id%20=' + str(userId)
-            )
-        with request.urlopen(req) as f:
-            page = f.read().decode('gbk')
-            reg = r'class="mm-first" href="//(.*?)"'
-            res = re.findall(reg,page)
-            for i in res:
-                print(i)
+        url = self.album_url + str(userId)
+        req = request.Request(url)
+        res = self.visit(req)
+        l = re.findall(r'class="mm-first" href="//(.*?)"', res)
+        for item in l:
+            print(item)
 
     # 获取相册照片
     def get_album_photos(self, user_id, album_id):
-        pass
+        url = self.album_photo_url % (user_id, album_id)
+        req = request.Request(url)
+        res = self.visit(req)
+        print(res)
 
     # 访问url地址
-    def visit(self, url):
-        with request.urlopen(url) as f:
-            if f.status ==200:
-                return f.read().decode('gbk')
+    def visit(self, req):
+        '''访问url，返回utf-8页面'''
+        with request.urlopen(req) as f:
+            if f.status == 200:
+                return f.read().decode('gbk').encode('utf-8').decode('utf-8')
+
+    def mkdir(self):
+        pass
+
+    # 保存模特信息
+    def save_profile(self):
+        pass
+
+    # 保存图片
+    def save_imgs(self):
+        pass
 
     def run(self):
-        self.get_album_list(646632716)
+        s = self.get_tstar_list()
+        print(s)
 
 
 mm = TMM()
