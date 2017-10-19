@@ -86,16 +86,17 @@ class TMM(object):
     def save_imgs(self, userId, path):
         album_ids = self.get_album_ids(userId)
         index = 1
-        
+
         for id in album_ids:
             photos = self.get_album_photos(userId, id)
             if photos:
                 for pic in photos:
                     # 下载大图
                     with request.urlopen('https:' + pic['picUrl'].replace(self.img_size['small'], self.img_size['large'])) as f:
-                        with open(path + self.delimiter + str(index) + '.jpg', 'wb') as img:
-                            img.write(f.read())
-                            index += 1
+                        if f.status == 200:
+                            with open(path + self.delimiter + str(index) + '.jpg', 'wb') as img:
+                                img.write(f.read())
+                                index += 1
 
     # 预编译正则
     def compile(self, pattern=None):
