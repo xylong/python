@@ -112,6 +112,10 @@ class TMM(object):
                                     index += 1
                     except error.URLError as e:
                         logging.error(e.reason)
+                    except TimeoutError as e:
+                        logging.error(e.strerror)
+                    except BaseException as e:
+                        logging.error(e.args)
 
     # 预编译正则
     def compile(self, pattern=None):
