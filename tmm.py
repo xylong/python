@@ -76,8 +76,10 @@ class TMM(object):
     def save_profile(self, mm):
         fileName = self.dir + self.delimiter + \
             mm['realName'] + self.delimiter + mm['realName'] + '.txt'
-        with open(fileName, 'w') as f:
-            f.write(mm['realName'])
+        content = '姓名:%s\n身高:%s\n体重:%s\n城市:%s\n喜好:%s\n爱秀:%s' % (
+            mm['realName'], mm['height'], mm['weight'], mm['city'], mm['totalFavorNum'], self.ai_show_url % mm['userId'])
+        with open(fileName, 'w', encoding='utf-8') as f:
+            f.write(content)
 
     # 保存图片
     def save_imgs(self):
