@@ -23,9 +23,10 @@ class TMM(object):
         # 个人中心(爱秀)
         self.ai_show_url = 'https://mm.taobao.com/self/aiShow.htm?userId=%s'
         self.album_url = 'https://mm.taobao.com/self/album/open_album_list.htm?_charset=utf-8&user_id%20='  # 相册列表
-        self.album_photo_url = 'https://mm.taobao.com/self/album/album_photo_list.htm?user_id=%s&album_id=%s'   # 具体相册
+        self.album_photo_url = 'https://mm.taobao.com/album/json/get_album_photo_list.htm?user_id=%s&album_id=%s'   # 具体相册
 
         self.pattern = {'album': r'<h4>.*?album_id=(.*?)&'}
+        self.img_size = {'small': 'jpg_290x10000', 'large': 'jpg_620x10000'}
 
     # 获取淘女郎list
     def get_tstar_list(self):
@@ -42,7 +43,6 @@ class TMM(object):
         url = self.ai_show_url % userId
         req = request.Request(url)
         res = self.visit(req)
-        print(res)
 
     # 获取相册列表
     def get_album_ids(self, userId):
@@ -52,12 +52,13 @@ class TMM(object):
         pattern = self.compile(self.pattern['album'])
         return re.findall(pattern, res)
 
-    # 获取相册照片
+    # 获取相册照片地址
     def get_album_photos(self, user_id, album_id):
         url = self.album_photo_url % (user_id, album_id)
         req = request.Request(url)
         res = self.visit(req)
-        print(res)
+        data = json.loads(res)
+        return data.get('picList')
 
     # 访问url地址
     def visit(self, req):
@@ -76,14 +77,25 @@ class TMM(object):
     def save_profile(self, mm):
         fileName = self.dir + self.delimiter + \
             mm['realName'] + self.delimiter + mm['realName'] + '.txt'
-        content = '姓名:%s\n身高:%s\n体重:%s\n城市:%s\n喜好:%s\n爱秀:%s' % (
+        content = '姓名:%s\n身高:%s\n体重:%s\n城市:%s\n点赞数:%s\n爱秀:%s' % (
             mm['realName'], mm['height'], mm['weight'], mm['city'], mm['totalFavorNum'], self.ai_show_url % mm['userId'])
         with open(fileName, 'w', encoding='utf-8') as f:
             f.write(content)
 
     # 保存图片
-    def save_imgs(self):
-        pass
+    def save_imgs(self, userId, path):
+        album_ids = self.get_album_ids(userId)
+        index = 1
+        
+        for id in album_ids:
+            photos = self.get_album_photos(userId, id)
+            if photos:
+                for pic in photos:
+                    # 下载大图
+                    with request.urlopen('https:' + pic['picUrl'].replace(self.img_size['small'], self.img_size['large'])) as f:
+                        with open(path + self.delimiter + str(index) + '.jpg', 'wb') as img:
+                            img.write(f.read())
+                            index += 1
 
     # 预编译正则
     def compile(self, pattern=None):
@@ -94,6 +106,7 @@ class TMM(object):
         path = self.dir + self.delimiter + tstar['realName']
         self.mkdir(path)
         self.save_profile(tstar)
+        self.save_imgs(tstar['userId'], path)
 
     # 获取目录分隔符
     @property
