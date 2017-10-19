@@ -6,10 +6,19 @@
 # @Version : 1.1
 
 from urllib import request
+from urllib import error
 import re
 import os
 import json
 import platform
+import logging
+import time
+
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
+                    datefmt='%a, %d %b %Y %H:%M:%S',
+                    filename='tmm.log',
+                    filemode='w')
 
 
 class TMM(object):
@@ -92,11 +101,17 @@ class TMM(object):
             if photos:
                 for pic in photos:
                     # 下载大图
-                    with request.urlopen('https:' + pic['picUrl'].replace(self.img_size['small'], self.img_size['large'])) as f:
-                        if f.status == 200:
-                            with open(path + self.delimiter + str(index) + '.jpg', 'wb') as img:
-                                img.write(f.read())
-                                index += 1
+                    try:
+                        with request.urlopen('https:' + pic['picUrl'].replace(self.img_size['small'], self.img_size['large'])) as f:
+                            if f.status == 200:
+                                with open(path + self.delimiter + str(index) + '.jpg', 'wb') as img:
+                                    img.write(f.read())
+                                    # 爬100张睡1s，防止防火墙ban掉connect
+                                    if index % 100 == 0:
+                                        time.sleep(1)
+                                    index += 1
+                    except error.URLError as e:
+                        logging.error(e.reason)
 
     # 预编译正则
     def compile(self, pattern=None):
